@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading → Not Available</title><style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+    }
+
+    /* Loading Screen */
+    #loadingPage {
+        text-align: center;
+    }
+
+    .loader {
+        width: 70px;
+        height: 70px;
+        border: 6px solid rgba(255,255,255,0.2);
+        border-top: 6px solid #00ffd5;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Not Available UI */
+    #notAvailablePage {
+        display: none;
+        text-align: center;
+        background: rgba(255,255,255,0.05);
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .icon {
+        font-size: 60px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    p {
+        opacity: 0.8;
+    }
+
+    .btn {
+        margin-top: 20px;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 25px;
+        background: #ff4b5c;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #ff1e3c;
+    }
+</style></head><body><!-- Loading Page --><div id="loadingPage">
+    <h2>Loading...</h2>
+    <div class="loader"></div>
+    <p>Please wait while we check availability</p>
+</div><!-- Not Available Page --><div id="notAvailablePage">
+    <div class="icon">⚠️</div>
+    <h1>Not Available</h1>
+    <p>Sorry, this page or content is currently unavailable.</p>
+    <button class="btn" onclick="retry()">Retry</button>
+</div><script>
+    // Show loading first, then Not Available page
+    setTimeout(() => {
+        document.getElementById("loadingPage").style.display = "none";
+        document.getElementById("notAvailablePage").style.display = "block";
+    }, 3000);
+
+    function retry() {
+        location.reload();
+    }
+</script></body>
+</html>
