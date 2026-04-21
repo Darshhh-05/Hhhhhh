@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{
+height:100vh;
+background:linear-gradient(135deg,#ff758c,#ff7eb3);
+display:flex;justify-content:center;align-items:center;overflow:hidden;
+}
+.card{
+width:90%;max-width:360px;padding:30px;border-radius:25px;
+background:rgba(255,255,255,0.15);backdrop-filter:blur(15px);
+text-align:center;color:white;box-shadow:0 10px 40px rgba(0,0,0,0.25);
+}
+.card p{margin-top:12px;line-height:1.6;}
+.hidden{display:none;}
+.btn{margin-top:20px;padding:12px 25px;border-radius:30px;border:none;background:#ff4b2b;color:white;}
+.tap-box{margin-top:20px;padding:30px;background:white;color:#ff4b2b;border-radius:20px;font-size:20px;font-weight:bold;}
+
+.progress-box{width:100%;height:10px;background:#fff3;border-radius:10px;overflow:hidden;margin-top:20px;}
+.progress{height:100%;width:0%;background:white;}
+
+.reel-container{height:420px;overflow-y:scroll;scroll-snap-type:y mandatory;border-radius:15px;}
+.reel{height:420px;scroll-snap-align:start;}
+.reel iframe{width:100%;height:100%;border-radius:15px;}
+.scroll-hint{font-size:14px;margin-bottom:10px;animation:bounce 1s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+.cake-box{position:relative;width:180px;height:180px;margin:20px auto;}
+.half{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;font-size:100px;transition:0.6s;}
+.left{clip-path:inset(0 50% 0 0);}
+.right{clip-path:inset(0 0 0 50%);}
+.split-left{transform:translateX(-40px) rotate(-8deg);}
+.split-right{transform:translateX(40px) rotate(8deg);}
+.knife{position:absolute;font-size:32px;top:0;left:50%;transform:translateX(-50%);}
+.cut-line{position:absolute;width:3px;height:0;background:white;left:50%;top:20%;transform:translateX(-50%);transition:0.4s;}
+.final{font-size:26px;font-weight:bold;}
+</style>
+</head>
+
+<body>
+
+<audio id="cutSound">
+<source src="https://www.soundjay.com/mechanical/sounds/knife-slice-01.mp3">
+</audio>
+
+<!-- FRONT -->
+<div id="s0" class="card">
+<h2>WARNING⚠️</h2>
+<p>
+This surprise is only for <b>19 years old xxxyz👽</b><br><br>
+If your age is below 19 ❌<br>
+Please close this immediately 😏
+</p>
+<div class="tap-box" onclick="tapGame()">TAP TO PROVE🫵</div>
+<p id="count">Proof: 0 / 19</p>
+<p style="font-size:14px;opacity:0.8;">(Fake people will be rejected)</p>
+</div>
+
+<!-- LOADING -->
+<div id="loadingPage" class="card hidden">
+<h2>⏳ Verifying Age...</h2>
+<p>Please wait... checking if you are really 19 😏</p>
+<div class="progress-box"><div id="progressBar" class="progress"></div></div>
+<p id="loadingText">0%</p>
+</div>
+
+<!-- CANCEL -->
+<div id="sCancel" class="card hidden">
+<h2 id="cancelTitle">🔐 Access Locked</h2>
+<p id="cancelMsg">Checking identity...</p>
+
+<p style="margin-top:12px;">
+I’m wishing you at 10:10 PM because I know you didn’t expect a birthday wish from me…<br>
+but some feelings don’t fade, and I couldn’t ignore them today 💛
+</p>
+
+<p style="font-size:14px;opacity:0.8;">System is analyzing your truth 😏</p>
+
+<button class="btn" onclick="angryNext()">Retry Anyway 😶</button>
+</div>
+
+<!-- PAGE 1 -->
+<div id="s1" class="card hidden">
+<h2>OHHH SO YOU ARE REALLY 19</h2>
+<button class="btn" onclick="next('s1','s2')">Open 💌</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="s2" class="card hidden">
+<h2>Meine Tante ist sehr nett👾</h2>
+<video autoplay muted playsinline controls width="100%">
+<source src="https://www.w3schools.com/html/mov_bbb.mp4">
+</video>
+<button class="btn" onclick="next('s2','s3')">Next 👉</button>
+</div>
+
+<!-- CAKE -->
+<div id="s3" class="card hidden">
+<p>Drag knife to cut cake 🎂</p>
+<div class="cake-box" id="cakeBox">
+<div class="half left" id="cakeLeft">🎂</div>
+<div class="half right" id="cakeRight">🎂</div>
+<div class="knife" id="knife">🔪</div>
+<div class="cut-line" id="cutLine"></div>
+</div>
+<div id="cutMsg" style="opacity:0;">🎉 Cake Cut Successfully!</div>
+<button id="nextBtn" class="btn hidden" onclick="next('s3','s4')">Next 👉</button>
+</div>
+
+<!-- WISH -->
+<div id="s4" class="card hidden">
+<div class="final">🎉 Happy 19th Birthday 🎂</div>
+<button class="btn" onclick="next('s4','s6')">Next 👉</button>
+</div>
+
+<!-- REELS -->
+<div id="s6" class="card hidden">
+<h2>🎬 Special Video</h2>
+<div class="scroll-hint" id="scrollHint">⬇ Scroll Down for Next Reel ⬇</div>
+<div class="reel-container" id="reelBox">
+<div class="reel"><iframe src="https://www.instagram.com/reel/DWTrqCJiYFr/embed"></iframe></div>
+<div class="reel"><iframe src="https://www.instagram.com/reel/DVOGGzBD818/embed"></iframe></div>
+</div>
+<button class="btn" onclick="next('s6','s5')">Next 👉</button>
+</div>
+
+<!-- FINAL MESSAGE -->
+<div id="s5" class="card hidden">
+<h2 style="margin-bottom:15px;"> WAITTTT </h2>
+
+<p>
+But honestly…<br>
+I just wanted to see your smile today💛<br><br>
+
+<span style="font-size:14px;opacity:0.8;">
+This is the last message I will ever send.<br>
+I will never message again…
+</span>
+</p>
+
+<button class="btn" onclick="next('s5','s7')">Last Page 👉</button>
+</div>
+
+<!-- FINAL -->
+<div id="s7" class="card hidden">
+<h2>🎉 Happy 19th Birthday 🎂</h2>
+
+<p>
+You are not just getting older…<br>
+You get more special every year💫 maybe?<br><br>
+Stay happy, stay crazy <br>
+And never stop being YOU ❤️<br><br>
+Once again…<br>
+<b>Happy Birthday xyz 🎉</b> 💛
+</p>
+
+<p style="font-size:14px;opacity:0.8;">
+Okay now sleep 😴… tomorrow you are officially older 😂
+</p>
+
+<button class="btn" onclick="openInstagram()">Unblock🔐</button>
+</div>
+
+<script>
+let taps=0;
+
+function tapGame(){
+taps++;
+count.innerText=`Proof: ${taps} / 19`;
+
+if(taps===10){
+if(!confirm("Still checking... are you really 19? 🤨😂")){
+navigator.vibrate?.([200,100,200]);
+next('s0','sCancel');
+return;
+}
+}
+
+if(taps===19) showLoading();
+}
+
+function showLoading(){
+next('s0','loadingPage');
+let p=0;
+let i=setInterval(()=>{
+p+=Math.floor(Math.random()*10)+5;
+if(p>=100){
+p=100;
+clearInterval(i);
+setTimeout(()=>next('loadingPage','s1'),500);
+}
+progressBar.style.width=p+"%";
+loadingText.innerText=p+"%";
+},300);
+}
+
+function angryNext(){
+navigator.vibrate?.([300,100,300,100,500]);
+cancelTitle.innerText="🚨 Fake Detected!";
+cancelMsg.innerText="System says: Not 19 ❌";
+
+setTimeout(()=>cancelMsg.innerText="Double checking...",800);
+setTimeout(()=>cancelMsg.innerText="Still fake 😭 but special 💛",1600);
+setTimeout(()=>cancelMsg.innerText="Retrying...",2200);
+
+setTimeout(()=>{
+next('sCancel','s0');
+taps=0;
+count.innerText="Proof: 0 / 19";
+cancelTitle.innerText="🔐 Access Locked";
+cancelMsg.innerText="Checking identity...";
+},2500);
+}
+
+function next(h,s){
+document.getElementById(h).classList.add("hidden");
+document.getElementById(s).classList.remove("hidden");
+}
+
+/* INSTAGRAM OPEN (NO DATE LIMIT) */
+function openInstagram(){
+let username = "drsannk";
+
+/* Try opening app */
+window.location.href = "instagram://user?username=" + username;
+
+/* Fallback to browser */
+setTimeout(()=>{
+  window.location.href = "https://www.instagram.com/" + username + "/";
+},1200);
+}
+
+reelBox?.addEventListener("scroll",()=>scrollHint.style.display="none");
+
+let dragging=false,cutDone=false;
+cakeBox.ontouchstart=()=>dragging=true;
+cakeBox.ontouchend=()=>dragging=false;
+
+cakeBox.ontouchmove=e=>{
+if(!dragging||cutDone)return;
+let y=e.touches[0].clientY-cakeBox.getBoundingClientRect().top;
+knife.style.top=y+"px";
+
+if(y>120&&!cutDone){
+navigator.vibrate?.([200,100,200]);
+cutLine.style.height="60%";
+cakeLeft.classList.add("split-left");
+cakeRight.classList.add("split-right");
+cutMsg.style.opacity=1;
+nextBtn.classList.remove("hidden");
+cutSound.play();
+cutDone=true;
+}
+};
+</script>
+
+</body>
+</html>
